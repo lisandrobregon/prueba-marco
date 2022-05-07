@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <title>
+        <meta charset="utf-8">
+    </title>
+    <body>
+        <script>
+            let peliculas = [];
+            //despues sacar
+            peliculas.push(['Los increibles','Brad Bird','si',false]);
+            peliculas.push(['End Game','Anthony Russo & Joe Russo','no','Marco Ghirimoldi']);
+            peliculas.push(['Top Gun 2022','Joseph Kosinski','si',false]);
+            //y cambiar la variable de abajo a 0
+            let cantidadPeliculas = 3;
+            function principal(){
+                let opcion = parseInt(prompt(`MENU\n----\n1.Alta\n2.Listar peliculas\n3.Buscar pelicula\n4.Alquilar pelicula\n5.Devolver pelicula`));
+                if(opcion>0 & opcion<6){
+                    switch (opcion) {
+                        case 1:
+                            agregarPelicula();
+                        break;
+                        case 2:
+                            listarPeliculas();
+                        break;
+                        case 3:
+                            buscarPelicula(ingresarPelicula());
+                        break;
+                        case 4:
+                            alquilarPelicula(ingresarPelicula());
+                        break;
+                        case 5:
+                            devolverPelicula(ingresarPelicula());
+                        break;
+                    }
+                } else{
+                    alert('No ingreso una opcion valida')
+                }
+            }
+
+            function agregarPelicula(){
+                let nombre = prompt('Ingresar el nombre de la pelicula');
+                let director = prompt('Ingresar el nombre del director');
+                peliculas.push([nombre,director,"si",false]);//los ultimos dos valores son 1. si esta alquilada o no 2. quien es el cliente
+                cantidadPeliculas = cantidadPeliculas + 1;
+                document.write(`<p>Se agrego la pelicula ${nombre} del director ${director}</p>`);
+                document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+            }
+            function listarPeliculas(){
+                peliculas.forEach(pelicula => {
+                    if(pelicula[3]){
+                        document.write(`<p id="parrafo">${pelicula[0]}, ${pelicula[1]} - Disponible: ${pelicula[2]} Cliente: ${pelicula[3]}</p>`);
+                    }else{
+                        document.write(`<p id="parrafo">${pelicula[0]}, ${pelicula[1]} - Disponible: ${pelicula[2]}</p>`);
+                    }
+                })
+                document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+            }
+            function ingresarPelicula(){
+                let nombre = prompt('Ingresa el nombre de la pelicula')
+                if(!nombre){
+                    document.write(`<p>No coloco un nombre de pelicula</p>`)
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                }else{
+                    return nombre;
+                }
+                
+            }
+            function buscarPelicula(nombrePelicula){
+                let pelicula = buscarEnBase(nombrePelicula);
+                if(!pelicula){
+                    return;
+                }
+                if(pelicula[3]){
+                    document.write(`<p id="parrafo">${pelicula[0]}, ${pelicula[1]} - Disponible: ${pelicula[2]} Cliente: ${pelicula[3]}</p>`);
+                }else{
+                    document.write(`<p id="parrafo">${pelicula[0]}, ${pelicula[1]} - Disponible: ${pelicula[2]}</p>`);
+                }
+                document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+            }
+            function alquilarPelicula(nombrePelicula){
+                let pelicula = buscarEnBase(nombrePelicula);
+                if(pelicula[2] == 'no'){
+                    document.write(`<p>La pelicula ${nombrePelicula} ya esta alquilada</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+                    return;
+                }
+                let cliente = prompt(`Ingresar el nombre del cliente`);
+                if(!cliente){
+                    document.write(`<p>No coloco un nombre de cliente</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                } else{
+                    pelicula[2]="no";
+                    pelicula[3] = cliente.trim();
+                    document.write(`<p>El alquiler de ${pelicula[0]} a ${pelicula[3]} de forma exitosa</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                }
+            }
+            function devolverPelicula(nombrePelicula){
+                let pelicula = buscarEnBase(nombrePelicula);
+                if(pelicula[2] == "no"){
+                    pelicula[2] = "si";
+                    let cliente = pelicula[3];
+                    pelicula[3] = false;
+                    document.write(`<p>La pelicula fue registrada como devuelta por ${cliente}</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                }else{
+                    document.write(`<p>La pelicula no estaba registarda como alquilada</p>`)
+                }
+            }
+
+            function buscarEnBase(nombrePelicula){
+                let i = 0;
+                let salgo = false;
+                while(i <= cantidadPeliculas-1 & !salgo){
+                    console.log(i);
+                    console.log(peliculas[i]);
+                    let pelicula = peliculas[i];
+                    if(pelicula[0] == nombrePelicula.trim()){
+                        salgo = true;
+                        return pelicula;
+                    }
+                    i++
+                }
+                if(i>cantidadPeliculas-1){
+                    document.write(`<p>No se encontraron resultados a la busqueda de ${nombrePelicula}</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+                    return false;
+                }
+            }
+            //ignorar
+            principal();
+        </script>
+    </body>
+</html>
