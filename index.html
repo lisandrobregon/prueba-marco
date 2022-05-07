@@ -79,6 +79,9 @@
             }
             function alquilarPelicula(nombrePelicula){
                 let pelicula = buscarEnBase(nombrePelicula);
+                if(!pelicula){
+                    return;
+                }
                 if(pelicula[2] == 'no'){
                     document.write(`<p>La pelicula ${nombrePelicula} ya esta alquilada</p>`);
                     document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
