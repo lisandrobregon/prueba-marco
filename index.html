@@ -105,9 +105,10 @@
                     let cliente = pelicula[3];
                     pelicula[3] = false;
                     document.write(`<p>La pelicula fue registrada como devuelta por ${cliente}</p>`);
-                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
                 }else{
-                    document.write(`<p>La pelicula no estaba registarda como alquilada</p>`)
+                    document.write(`<p>La pelicula no estaba registarda como alquilada</p>`);
+                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
                 }
             }
 
