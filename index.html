@@ -23,23 +23,39 @@
                             listarPeliculas();
                         break;
                         case 3:
-                            buscarPelicula(ingresarPelicula());
+                            buscarPelicula(ingresarPelicula("buscar"));
                         break;
                         case 4:
-                            alquilarPelicula(ingresarPelicula());
+                            alquilarPelicula(ingresarPelicula("alquilar"));
                         break;
                         case 5:
-                            devolverPelicula(ingresarPelicula());
+                            devolverPelicula(ingresarPelicula("devolver"));
                         break;
                     }
                 } else{
-                    alert('No ingreso una opcion valida')
+                    if(confirm('No ingreso una opcion valida')){
+                        principal();
+                    }else{
+                        principal();
+                    }
                 }
             }
 
             function agregarPelicula(){
                 let nombre = prompt('Ingresar el nombre de la pelicula');
+                if(nombre.length<1){
+                    if(confirm(`No puedes poner una pelicula que tenga menos de un caracter en su nombre\nSi quieres volver al menu principal toca cancelar`)){
+                        agregarPelicula();
+                    }
+                }
                 let director = prompt('Ingresar el nombre del director');
+                if(director.length<1){
+                    if(confirm(`No puedes poner un director que tenga menos de un caracter en su nombre\nSi quieres volver al menu principal toca cancelar`)){
+                        agregarPelicula();
+                    }else{
+                        principal();
+                    }
+                }
                 peliculas.push([nombre,director,"si",false]);//los ultimos dos valores son 1. si esta alquilada o no 2. quien es el cliente
                 cantidadPeliculas = cantidadPeliculas + 1;
                 document.write(`<p>Se agrego la pelicula ${nombre} del director ${director}</p>`);
@@ -55,18 +71,30 @@
                 })
                 document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
             }
-            function ingresarPelicula(){
+            function ingresarPelicula(funcionLlamadora){
                 let nombre = prompt('Ingresa el nombre de la pelicula')
-                if(!nombre){
-                    document.write(`<p>No coloco un nombre de pelicula</p>`)
-                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                if(nombre.length<1){
+                    if(confirm(`No puedes buscar una pelicula que no tenga nombre\nSi quieres volver al menu principal toca cancelar`)){
+                        switch(funcionLlamadora){
+                            case "buscar":
+                                buscarPelicula(ingresarPelicula("buscar"));
+                            break;
+                            case "alquilar":
+                                alquilarPelicula(ingresarPelicula("alquilar"));
+                            break;
+                            case "devolver":
+                                devolverPelicula(ingresarPelicula("devolver"));
+                            break;
+                        }
+                    }else{
+                        principal();
+                    }
                 }else{
                     return nombre;
                 }
-                
             }
             function buscarPelicula(nombrePelicula){
-                let pelicula = buscarEnBase(nombrePelicula);
+                let pelicula = buscarEnBase(nombrePelicula,"buscar");
                 if(!pelicula){
                     return;
                 }
@@ -78,7 +106,7 @@
                 document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
             }
             function alquilarPelicula(nombrePelicula){
-                let pelicula = buscarEnBase(nombrePelicula);
+                let pelicula = buscarEnBase(nombrePelicula,"alquilar");
                 if(!pelicula){
                     return;
                 }
@@ -89,8 +117,11 @@
                 }
                 let cliente = prompt(`Ingresar el nombre del cliente`);
                 if(!cliente){
-                    document.write(`<p>No coloco un nombre de cliente</p>`);
-                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`)
+                    if(confirm(`No coloco el nombre del cliebte\nSi quieres volver a buscar la pelicula toca cancelar`)){
+                        principal();
+                    }else{
+                        principal();
+                    }
                 } else{
                     pelicula[2]="no";
                     pelicula[3] = cliente.trim();
@@ -99,7 +130,10 @@
                 }
             }
             function devolverPelicula(nombrePelicula){
-                let pelicula = buscarEnBase(nombrePelicula);
+                let pelicula = buscarEnBase(nombrePelicula,"devolver");
+                if(!pelicula){
+                    return;
+                }
                 if(pelicula[2] == "no"){
                     pelicula[2] = "si";
                     let cliente = pelicula[3];
@@ -107,12 +141,13 @@
                     document.write(`<p>La pelicula fue registrada como devuelta por ${cliente}</p>`);
                     document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
                 }else{
-                    document.write(`<p>La pelicula no estaba registarda como alquilada</p>`);
-                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
+                    if(confirm(`La pelicula "${nombrePelicula}" no esta registrada como alquilada`)){
+                        devolverPelicula(ingresarPelicula());
+                    }
                 }
             }
 
-            function buscarEnBase(nombrePelicula){
+            function buscarEnBase(nombrePelicula,funcionLlamadora){
                 let i = 0;
                 let salgo = false;
                 while(i <= cantidadPeliculas-1 & !salgo){
@@ -126,9 +161,21 @@
                     i++
                 }
                 if(i>cantidadPeliculas-1){
-                    document.write(`<p>No se encontraron resultados a la busqueda de ${nombrePelicula}</p>`);
-                    document.write(`<input type='button' value='Volver al menu' onclick='principal()'>`);
-                    return false;
+                    if(confirm(`No se encontro una pelicula con ese nombre\nSi quieres volver al menu principal toca cancelar`)){
+                        switch(funcionLlamadora){
+                            case "buscar":
+                                buscarPelicula(ingresarPelicula("buscar"));
+                            break;
+                            case "alquilar":
+                                alquilarPelicula(ingresarPelicula("alquilar"));
+                            break;
+                            case "devolver":
+                                devolverPelicula(ingresarPelicula("devolver"));
+                            break;
+                        }
+                    }else{
+                        principal();
+                    }
                 }
             }
             //ignorar
